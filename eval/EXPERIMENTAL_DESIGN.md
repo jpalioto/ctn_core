@@ -1,7 +1,12 @@
 # Cognitive Tensor Networks (CTN) — Experimental Design v0.1
 
-Status: draft  
-Scope: minimal, rigorous, fully reproducible evaluation of CTN kernels on frontier LLMs
+Status: Draft / Work in Progress  
+Author: John P. Alioto (@jpalioto)  
+Intent: Define a minimal, rigorous, reproducible protocol to evaluate the effect of CTN kernels on LLM reasoning geometry.
+
+Context: This design accompanies the essay  
+"Hallucinations Are Geometric Failures, Not Cognitive Errors" https://open.substack.com/pub/jpalioto/p/hallucinations-are-geometric-failures
+
 
 ## 1. Objectives
 
