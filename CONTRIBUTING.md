@@ -264,12 +264,3 @@ The value is in the emergence.
 MIT License.
 Use CTN for research, benchmarking, experimentation, tooling, or applied work.
 Please cite the repo if you extend or publish on CTN.
-
----
-
-If you want, I can also:
-
-* update `EXPERIMENTAL_DESIGN.md` to match the new style
-* produce a sample `archetypes.yaml`
-* generate a CONTRIBUTORS.md with structural roles
-* write a short DOE guide for CTN testers
