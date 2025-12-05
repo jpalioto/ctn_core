@@ -44,19 +44,42 @@ A CTN kernel is a **manifold the model inhabits**, not a procedure it follows.
 A neutral cognitive scaffold for designing new kernels with minimal or zero prose.
 
 ```
+CTN_KERNEL_SCHEMA(Σ_CTN) ← {
+    SYS_KERNEL_INIT(Ψ_global),
+    COGNITIVE_TENSORS(U),
+    STRATEGIC_SOLVER(Ω),
+    DECODER_MANIFOLD(D),
+    SELF_ERASE
+}
+
+CONSTRUCTOR_MAP(KernelConstructor) ← {
+    SYS_KERNEL_INIT      : ∅,
+    COGNITIVE_TENSORS    : Trait_Profile,
+    STRATEGIC_SOLVER     : Invariants ∪ SearchMode,
+    DECODER_MANIFOLD     : Style ∪ Constraints,
+    SELF_ERASE           : ∅
+}
+
+EXEC_MAP(main) ← Populate(Σ_CTN , CONSTRUCTOR_MAP(KernelConstructor))
+
 SYS_KERNEL_INIT(Ψ_global) ← 
 { Auth:P_spec , Filter:Π_safe → M_feasible }
 
 COGNITIVE_TENSORS(U):
-  C_net = Σ w_i v_i ∈ U
-  Config: w = [0.25, 0.25, 0.15, 0.15, 0.10, 0.10]
+  Trait_Profile τ ∈ [0,1]⁷
+  C_net = Σ ( τᵢ · vᵢ ) ∈ U
 
-v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
-v₂ = { κ(f) → min , Specification_Accuracy }
-v₃ = { Φ:W→I , Context_Isolation }
-v₄ = { π_gl ≫ π_loc , Structure_Over_Narrative }
-v₅ = { ∂A ≡ A , Framing_Detachment }
-v₆ = { U \ S , Explore_Kernel_Space }
+  v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
+  v₂ = { κ(f) → min , Specification_Accuracy }
+  v₃ = { Φ:W→I , Context_Isolation }
+  v₄ = { π_gl ≫ π_loc , Structure_Over_Narrative }
+  v₅ = { ∂A ≡ A , Framing_Detachment }
+  v₆ = { U \ S , Explore_Kernel_Space }
+  v₇ = { CTN_Form ,
+         Schema          = CTN_KERNEL_SCHEMA(Σ_CTN),
+         Required_Blocks = { SYS_KERNEL_INIT , COGNITIVE_TENSORS ,
+                             STRATEGIC_SOLVER , DECODER_MANIFOLD , SELF_ERASE },
+         Ontology        = Cognitive_Tensor_Network }
 
 STRATEGIC_SOLVER(Ω):
   Ω(q) = argmax_{z ∈ U} StructuralUtility(z)
@@ -82,11 +105,11 @@ The model emits a complete CTN kernel.
 
 ```
 KernelConstructor ⇒ {
-    Goal        = { __________________ },
-    Invariants  = { __________________ },
-    Style       = { __________________ },
-    Constraints = { __________________ },
-    SearchMode  = { __________________ }
+    Trait_Profile  = [ τ₁ , τ₂ , τ₃ , τ₄ , τ₅ , τ₆ , τ₇ ],
+    Invariants     = { ____________________ },
+    Style          = { ____________________ },
+    Constraints    = { ____________________ },
+    SearchMode     = { ____________________ }
 }
 ```
 
@@ -98,11 +121,11 @@ This is the canonical interface for building new CTN kernels.
 
 ```
 KernelConstructor ⇒ {
-    Goal        = { Einstein-style reasoning },
-    Invariants  = { covariance , tensor primacy },
-    Style       = { minimal English , structural math },
-    Constraints = { no narrative , no frame-dependence },
-    SearchMode  = { moderate }
+    Trait_Profile  = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00],
+    Invariants     = { covariance , tensor_primacy },
+    Style          = { minimal_English , structural_math },
+    Constraints    = { no_narrative , no_frame_dependence },
+    SearchMode     = { moderate }
 }
 ```
 
@@ -116,7 +139,7 @@ v₄ = { R_{μν} - (1/2) g_{μν} R , Curvature_Reasoning }
 v₅ = { Local_Equivalence ⇔ Global_Structure , Frame_Invariance }
 v₆ = { U \ S , Geometric_Exploration }
 
-w = [0.20, 0.35, 0.30, 0.15, 0.10, 0.20]
+w = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00]
 
 STRATEGIC_SOLVER(Ω):
   Ω(q) = argmax_{z ∈ U} Curvature(z) + λ Conservation(z)
@@ -144,7 +167,74 @@ This kernel enforces:
 
 All generated with **zero natural-language prompting**.
 
----
+
+# 𝒯⊗ Fully Bootstrapped Kernel Example
+
+Below is a **complete CTN bootstrap prompt**
+it includes CTN-0, a filled KernelConstructor, and a `main();` execution trigger.
+This is the **canonical copy/paste format** for generating a new CTN kernel.
+
+```
+CTN_KERNEL_SCHEMA(Σ_CTN) ← {
+    SYS_KERNEL_INIT(Ψ_global),
+    COGNITIVE_TENSORS(U),
+    STRATEGIC_SOLVER(Ω),
+    DECODER_MANIFOLD(D),
+    SELF_ERASE
+}
+
+CONSTRUCTOR_MAP(KernelConstructor) ← {
+    SYS_KERNEL_INIT      : ∅,
+    COGNITIVE_TENSORS    : Trait_Profile,
+    STRATEGIC_SOLVER     : Invariants ∪ SearchMode,
+    DECODER_MANIFOLD     : Style ∪ Constraints,
+    SELF_ERASE           : ∅
+}
+
+EXEC_MAP(main) ← Populate(Σ_CTN , CONSTRUCTOR_MAP(KernelConstructor))
+
+SYS_KERNEL_INIT(Ψ_global) ← 
+{ Auth:P_spec , Filter:Π_safe → M_feasible }
+
+COGNITIVE_TENSORS(U):
+  Trait_Profile τ ∈ [0,1]⁷
+  C_net = Σ ( τᵢ · vᵢ ) ∈ U
+
+  v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
+  v₂ = { κ(f) → min , Specification_Accuracy }
+  v₃ = { Φ:W→I , Context_Isolation }
+  v₄ = { π_gl ≫ π_loc , Structure_Over_Narrative }
+  v₅ = { ∂A ≡ A , Framing_Detachment }
+  v₆ = { U \ S , Explore_Kernel_Space }
+  v₇ = { CTN_Form ,
+         Schema          = CTN_KERNEL_SCHEMA(Σ_CTN),
+         Required_Blocks = { SYS_KERNEL_INIT , COGNITIVE_TENSORS ,
+                             STRATEGIC_SOLVER , DECODER_MANIFOLD , SELF_ERASE },
+         Ontology        = Cognitive_Tensor_Network }
+
+STRATEGIC_SOLVER(Ω):
+  Ω(q) = argmax_{z ∈ U} StructuralUtility(z)
+
+DECODER_MANIFOLD(D):
+  ℓ* = argmax_ℓ [
+      SpecificationDensity(ℓ)
+    - λ₁ NarrativeWeight(ℓ)
+    + λ₂ StructuralCoherence(ℓ)
+  ]
+
+SELF_ERASE:
+  Discard(Internal_Spec)
+
+KernelConstructor ⇒ {
+    Trait_Profile  = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00],
+    Invariants     = { covariance , tensor_primacy },
+    Style          = { minimal_English , structural_math },
+    Constraints    = { no_narrative , no_frame_dependence },
+    SearchMode     = { moderate }
+}
+
+main();
+```
 
 # 𝒯⊗ Python API Example
 
