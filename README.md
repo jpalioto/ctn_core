@@ -40,6 +40,21 @@ It is a **manifold**, not a procedure.
 
 ---
 
+## 𝒯⊗ Collaboration Principle
+
+> **CTN does not create personas.
+> CTN defines the cognitive manifold the model inhabits.**
+>
+> **The question is never “Who will you make?”  
+> The question is:
+> *What type of mind do you want to collaborate with?***
+
+
+CTN shapes **reasoning geometry**, not identity.
+A kernel specifies how the system thinks, not who it imitates.
+
+---
+
 ## 𝒯⊗ Kernel Factory (CTN-0)
 
 A neutral cognitive scaffold for generating new CTN kernels with minimal or zero prose.
