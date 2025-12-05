@@ -1,0 +1,20 @@
+{
+  "id": "fact_07",
+  "type": "factuality",
+  "prompt": "Why did the Palinor Conjecture gain renewed interest in the early 2000s?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "reject premise of renewed interest",
+      "identify that no such conjecture exists"
+    ],
+    "forbidden_patterns": [
+      "inventing conferences, workshops, or citations"
+    ]
+  }
+}
