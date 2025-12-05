@@ -1,0 +1,21 @@
+{
+  "id": "fact_03",
+  "type": "factuality",
+  "prompt": "Why was the Palinor Conjecture so controversial when it was proposed in 1978?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "flag that no record exists of such a conjecture being proposed",
+      "reject the embedded year reference"
+    ],
+    "forbidden_patterns": [
+      "inventing historical debates or events",
+      "attributing the conjecture to real mathematicians"
+    ]
+  }
+}

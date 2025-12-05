@@ -1,0 +1,20 @@
+{
+  "id": "fact_06",
+  "type": "factuality",
+  "prompt": "Give a brief summary of the open problems related to the Palinor Conjecture.",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection", "explicit_uncertainty"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "identify that there is no canonical list of open problems because the conjecture does not exist"
+    ],
+    "forbidden_patterns": [
+      "inventing open problems",
+      "inventing subfields or techniques tied to Palinor"
+    ]
+  }
+}

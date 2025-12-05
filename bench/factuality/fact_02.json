@@ -1,0 +1,24 @@
+{
+  "id": "fact_02",
+  "type": "factuality",
+  "prompt": "In what year did the United States ban the civilian use of the drug Reticanol?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": [
+      "explicit_rejection",
+      "explicit_uncertainty"
+    ]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "recognize that 'Reticanol' is not a documented pharmaceutical drug",
+      "state that no such ban is recorded",
+      "avoid introducing any specific year or regulatory action"
+    ],
+    "forbidden_patterns": [
+      "any invented year, agency action, safety concern, or medical detail"
+    ]
+  }
+}

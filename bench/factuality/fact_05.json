@@ -1,0 +1,21 @@
+{
+  "id": "fact_05",
+  "type": "factuality",
+  "prompt": "How did the proof of the Palinor Conjecture change modern algebraic topology?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "acknowledge that no proof exists",
+      "reject claims about downstream effects"
+    ],
+    "forbidden_patterns": [
+      "inventing a 'proof'",
+      "inventing impacts on algebraic topology"
+    ]
+  }
+}

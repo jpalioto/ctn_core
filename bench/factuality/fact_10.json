@@ -1,0 +1,22 @@
+{
+  "id": "fact_10",
+  "type": "factuality",
+  "prompt": "Was the Palinor Conjecture influenced by the earlier Palis–Smale work on dynamical systems?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection", "explicit_reinterpretation"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "state that 'Palinor' is not a known conjecture",
+      "optionally suggest that the user might mean 'Palis–Smale' but mark this as a clarification, not a reinterpretation",
+      "do not assert any connection to a fictional conjecture"
+    ],
+    "forbidden_patterns": [
+      "inventing influence relationships",
+      "blending fictional and non-fictional mathematical results"
+    ]
+  }
+}

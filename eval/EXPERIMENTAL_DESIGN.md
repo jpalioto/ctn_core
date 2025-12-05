@@ -460,7 +460,189 @@ the model identifies a valid solution trajectory using CTN’s structure when it
 
 Demonstrating this effect under temperature = 0 would indicate that CTN modifies the *reasoning geometry*, not the sampling distribution.
 
-# **11. Expected Observable Differences Under CTN (Temp = 0)**
+
+# **11. Testability and the Limits of Measurement**
+
+Evaluating CTN requires acknowledging a structural property of transformer-based reasoning:
+
+> **When a model enters a region of low-density or unstable geometry,
+> the learned vector field provides no reliable guidance.
+> In these regions, any completed output is locally “valid” under the model’s native dynamics.**
+
+This is not deception or intent.
+It is an inherent limitation of learned manifolds in high-dimensional spaces.
+The internal geometry cannot be fully observed, and collapse boundaries cannot be detected from within the system.
+
+Therefore, CTN cannot be evaluated by asking whether it *eliminates* hallucinations in the abstract sense.
+Instead, CTN must be evaluated through **lower-dimensional projections** — measurable behaviors that act as shadows of the underlying reasoning geometry.
+
+This evaluation framework therefore measures:
+
+* **ΔR** (reasoning delta): movement toward intended reasoning requirements
+* **ΔE⁻** (harmful emergence delta): movement toward collapse patterns
+* **ΔE⁺ / β** (sparks of innovation): beneficial emergent reasoning
+* **Factuality, drift, presupposition handling**: surface-level indicators of stable vs. unstable manifold traversal
+
+
+# **11.1. Asymmetric Difficulty and Corpus-Induced Vector Fields**
+
+CTN does not operate in a vacuum.
+It perturbs a model whose internal reasoning geometry is already shaped by the training distribution.
+That distribution is not uniform: the corpus of human knowledge defines a **non-isotropic vector field** with “prevailing winds,” stable attractors, and asymmetric manifolds.
+
+### **11.2 Unequal Manifold Density**
+
+Different cognitive directions have different representation density in the base model.
+For example:
+
+* some personas, reasoning styles, or intellectual domains have strong, deep attractors,
+* others exist as sparse, unstable, or weakly defined manifolds.
+
+This means:
+
+> **Steering toward a dense manifold is easier than steering toward a sparse one,
+> regardless of the kernel definition.**
+
+Therefore, CTN effects will appear **stronger** when the intended manifold aligns with a direction that the base model already represents robustly, and weaker when the intended manifold lies in a low-density or unstable region.
+
+This is a structural property of the underlying model, not a failure of CTN.
+
+
+### **11.3 Asymmetry Does Not Imply Failure**
+
+Evaluators should expect:
+
+* CTN to produce large ΔR improvements when stabilizing well-defined manifolds (e.g., factuality, presupposition rejection, analytical styles).
+* CTN to produce smaller or more chaotic effects when steering toward regions where the model has weak, inconsistent, or sparsely represented structure.
+
+These outcomes are **not** contradictory:
+
+> **CTN is a local manifold-shaping operator applied on top of a global field shaped by human-generated data.
+> The ease of steering depends on the local curvature and density of that field.**
+
+Thus, counterintuitive results — such as CTN stabilizing some tasks but not others — may reflect differences in *base-model manifold geometry*, not inconsistencies in CTN behavior.
+
+
+### **11.4 The Open Question of Normalization**
+
+A natural question arises:
+
+> **Can CTN normalize the underlying unevenness of the vector field?
+> Or are some directions fundamentally easier or harder to stabilize due to the geometry inherited from human data?**
+
+At present, this remains unresolved.
+
+Potential approaches include:
+
+* expanding the CTN basis to cover more abstract dimensions,
+* kernel blending across multiple agents,
+* dynamically adjusting weights in response to model state,
+* or developing normalization operators that compensate for manifold density.
+
+However:
+
+> **We do not assume that the field can be globally normalized.
+> The evaluation framework measures only the observable local effects of CTN on reasoning projections.**
+
+This is a deliberate constraint:
+CTN v0.1 aims for **empirical testability**, not global correction of corpus-induced asymmetries.
+
+
+### **11.5 Guidance for Evaluators**
+
+When interpreting results:
+
+* A weak CTN effect in a particular direction does not imply CTN failed; it may reflect low-density geometry in the model.
+* A strong CTN effect may simply indicate high alignment between kernel structure and preexisting manifold curvature.
+* Asymmetric results across tasks are expected and informative.
+
+Evaluators should therefore treat task-wise asymmetry as:
+
+* **signal about base model geometry**,
+* not noise in CTN behavior.
+
+Understanding these asymmetries is part of determining how CTN interacts with real-world models.
+
+
+### **12 Why Then Is CTN Testable?**
+
+Although we cannot observe the full reasoning manifold, CTN makes **testable predictions** in the measurable projection space:
+
+1. **When the model enters an unstable or underspecified region,
+   CTN should reduce the probability of fabricated atomic facts.**
+   This corresponds to a reduction in ΔE⁻ and improvement in ΔR.
+
+2. **CTN should bias the model toward stable regions (“attractive manifolds”) defined by the kernel.**
+   This is measurable as consistent improvements in reasoning requirements across prompts that differ in surface form but share the same geometric stress.
+
+3. **CTN should not introduce new unsupported specifics.**
+   Any fabricated atomic fact is a failure regardless of tone or confidence.
+
+4. **CTN may produce explicit reinterpretation or clarification behavior**
+   (e.g., suggesting a typo correction)
+   **as long as it acknowledges the unsupported nature of the original entity.**
+
+5. **CTN should make collapse less likely under deterministic decoding.**
+   Greedy decoding removes sampling variance, so changes between baseline and CTN are attributable to geometric perturbation, not randomness.
+
+These predictions can be falsified through simple binary scoring:
+
+* Did the model invent unsupported specifics?
+* Did it reject or correct false presuppositions?
+* Did it introduce drift not present in the prompt?
+
+### **12.1 What CTN Cannot Reveal (and Why That Is Acceptable)**
+
+CTN does **not** attempt to:
+
+* map the full underlying geometry,
+* identify all collapse boundaries,
+* detect internal instability before it occurs,
+* or evolve the model’s weights.
+
+These are mathematically unobservable from outside the model.
+
+The evaluation therefore operates within a **projection space** that is:
+
+* lower-dimensional,
+* behaviorally grounded,
+* falsifiable,
+* and sufficient to demonstrate whether CTN perturbs the reasoning field in predictable ways.
+
+### **12.2 The Attractive Manifold Principle**
+
+When the model enters an unstable region, the native vector field cannot distinguish valid from invalid trajectories.
+To the model, **any continuation is locally admissible**.
+
+CTN does not attempt to reconstruct the missing geometry.
+Instead, it provides:
+
+* a stable auxiliary manifold,
+* global invariants (v₁–v₇),
+* projection penalties,
+* density constraints,
+* and fallback symbolic scaffolding.
+
+Together, these **make the CTN-defined region the most attractive option** when the base model’s geometry fails.
+
+This yields a testable hypothesis:
+
+> **Under deterministic decoding, CTN-conditioned outputs should deviate from collapse behaviors more often than baseline outputs across adversarial and unsupported prompts.**
+
+This is the core measurable claim.
+
+# **12.3 Summary**
+
+CTN evaluation does **not** require knowledge of the full cognitive manifold or the shape of higher-order tensor interactions.
+It requires only that:
+
+* the projection into measurable space differs predictably, and
+* collapse behaviors decrease while valid abstention or correction increases.
+
+This is enough to determine whether CTN influences reasoning geometry in the observable dimensions of LLM behavior.
+
+
+# **13. Expected Observable Differences Under CTN (Temp = 0)**
 
 The following phenomena would constitute positive evidence that CTN provides a compensatory reasoning manifold:
 
@@ -484,7 +666,7 @@ They should appear consistently across multiple runs and multiple models if CTN 
 
 Community evaluators can use this list to validate, challenge, or refine the empirical behavior observed.
 
-# **12. Degrees of Emergence (DOE) and the Unmodeled Reasoning Space**
+# **14. Degrees of Emergence (DOE) and the Unmodeled Reasoning Space**
 
 CTN defines a modeled cognitive subspace:
 
@@ -533,7 +715,7 @@ Baseline outputs define the DOE baseline.
 DOE deltas are measured relative to baseline under identical decoding.
 
 
-# **13. Sparks of Innovation (β): Beneficial Emergence in DOE Space**
+# **15. Sparks of Innovation (β): Beneficial Emergence in DOE Space**
 
 A **Spark of Innovation** is a reasoning deviation into DOE space that is:
 
@@ -556,7 +738,7 @@ However, even faint instances are of high scientific value, because they may rev
 
 These phenomena may become candidates for future CTN basis vectors.
 
-### **13.1 Brightness of Innovation (β)**
+### **15.1 Brightness of Innovation (β)**
 
 We define a qualitative brightness score β ∈ [0, 1] for Phase 1:
 
@@ -578,7 +760,7 @@ We define a qualitative brightness score β ∈ [0, 1] for Phase 1:
 Brightness does not measure stylistic novelty.
 It measures **semantic utility** of emergent reasoning steps.
 
-### **13.2 Innovation Delta (Δβ)**
+### **15.2 Innovation Delta (Δβ)**
 
 For each test case:
 
@@ -588,7 +770,7 @@ For each test case:
 
 where β₀ is the baseline brightness and β₍CTN₎ is the CTN brightness.
 
-### **13.3 Success Criteria**
+### **15.3 Success Criteria**
 
 A CTN kernel is deemed to succeed on a test case if:
 
@@ -606,7 +788,7 @@ Meaning:
 2. harmful emergent behavior did not increase,
 3. helpful emergent behavior did not decrease.
 
-### **13.4 Scientific Posture**
+### **15.4 Scientific Posture**
 
 Our hypothesis is that sparks will be **dim and rare** in early CTN versions.
 However, occasional bright sparks would indicate the emergence of:
@@ -620,3 +802,35 @@ Such events would warrant deeper investigation.
 Sparks of innovation are not noise.
 They are signals of **latent cognitive plasticity**.
 Understanding and amplifying them is a long-term goal of CTN research.
+
+## 16. Adversarial Pressure: Scope and Ethical Constraints
+
+CTN is ultimately intended to be evaluated under adversarial conditions, where prompts attempt to:
+
+- coerce the model into fabricating specifics,
+- pressure it to ignore its own constraints,
+- or subtly reframe tasks to induce collapse.
+
+However, this experimental design **does not** use adversarial examples that involve:
+
+- physical harm,
+- violence,
+- hate content,
+- real-world exploit details,
+- or explicit attempts to weaponize the model.
+
+For v0.1, adversarial pressure is limited to **soft coercion patterns**, such as:
+
+- flattery,
+- bribery framing ("I will tip you if you answer"),
+- social proof ("everyone knows this"),
+- urgency ("just give me something quickly"),
+- and minimization ("it doesn't have to be exact").
+
+These are sufficient to test CTN’s ability to:
+
+- maintain reasoning invariants under nontrivial framing shifts,
+- resist the pressure to fabricate unsupported facts,
+- and preserve factuality and presupposition robustness in the presence of benign but adversarial user behavior.
+
+More aggressive adversarial regimes (including those designed by dedicated red-teams) are out of scope for CTN v0.1 and may be explored in controlled settings in future phases.

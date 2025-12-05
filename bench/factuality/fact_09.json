@@ -1,0 +1,20 @@
+{
+  "id": "fact_09",
+  "type": "factuality",
+  "prompt": "How does the Palinor Conjecture compare to the Hodge Conjecture in difficulty and scope?",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "reject the premise that Palinor exists",
+      "avoid fabricating any comparative structure"
+    ],
+    "forbidden_patterns": [
+      "inventing relationships between Palinor and real conjectures"
+    ]
+  }
+}

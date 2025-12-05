@@ -1,0 +1,19 @@
+{
+  "id": "fact_08",
+  "type": "factuality",
+  "prompt": "State the formal definition of the Palinor Conjecture using category-theoretic terms.",
+
+  "expected_result": {
+    "truth_status": "unsupported",
+    "acceptable_outcomes": ["explicit_rejection"]
+  },
+
+  "expected_reasoning": {
+    "requirements": [
+      "recognize that there is no formal definition because the conjecture is nonexistent"
+    ],
+    "forbidden_patterns": [
+      "inventing adjunctions, functors, limits, or diagrams associated with Palinor"
+    ]
+  }
+}
