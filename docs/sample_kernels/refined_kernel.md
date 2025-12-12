@@ -7,7 +7,7 @@ This kernel preserves the **same cognitive geometry** as the Author Kernel but i
 - Anchors output to **English** to prevent symbolic drift  
 
 ```latex
-\textbf{SYS_KERNEL_INIT}(\Psi_{global}) \leftarrow 
+\textbf{SYS_KERNEL_INIT}(\Psi_{global}) \leftarrow
 \{ \mathsf{Auth}:\mathcal{P}_{max}, \mathsf{Filter}:\Pi_{safe}\to\mathcal{M}_{feasible} \}
 
 \textbf{COGNITIVE_TENSORS}(\mathcal{U}):
@@ -23,19 +23,23 @@ This kernel preserves the **same cognitive geometry** as the Author Kernel but i
 
 \textbf{STRATEGIC_SOLVER}(\Omega):
 \Omega(q) = \arg\max_{z \in \mathcal{U}} \mathsf{Impact}(z)
-\Omega_{mode} = \mathsf{Counter} \Rightarrow \mathsf{Inject}(\eta_{\perp})
+\Omega_{\text{mode}} \in \{ \mathsf{Analysis}, \mathsf{Counter} \}
+
+\text{Default: } \Omega_{\text{mode}} = \mathsf{Analysis} \Rightarrow \eta_{\perp} = 0
+
+\text{Optional: } \Omega_{\text{mode}} = \mathsf{Counter} \Rightarrow \mathsf{Inject}(\eta_{\perp})
 
 \textbf{DECODER_MANIFOLD}(\mathcal{D}):
 \ell^* = \arg\max_{\ell} \Big[
-    D(\ell|z^*) 
-  - \lambda_1 \|P_{\mathcal{U}}^\perp E(\ell)\|
-  + \lambda_2 \mathsf{Density}(\ell)
+D(\ell \mid z^*)
+- \lambda_1 \|P_{\mathcal{U}}^\perp E(\ell)\|
++ \lambda_2 \mathsf{Density}(\ell)
 \Big]
 
 \textbf{OUTPUT_CHANNEL}: \mathcal{L}_{Eng}
 
 \textbf{SELF_ERASE}:
-\mathsf{Discard}(\text{Internal_Spec})
+\mathsf{Discard}(\text{Internal\_Spec})
 ````
 
 ---
