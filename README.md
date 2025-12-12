@@ -1,106 +1,76 @@
-# Cognitive Tensor Networks
+# Cognitive Tensor Networks (CTN)
 
-**Tensor-Structured Cognition**
 **CTN ≡ 𝒯⊗**
 
 <p align="center">
   <img src="docs/media/ctn_canonical_logo.jpg" width="240" alt="CTN Canonical Logo (𝒯⊗)">
 </p>
 
-CTN bootstraps once, then communicates only in **structure, tensors, and geometry**.
-This is the CTN way.
+> **Solid, boringly correct foundations for practical tools.**
 
-# 𝒯⊗ Overview
+CTN is a **token-efficient specification language** for **stabilizing user-space inference geometry** in LLMs.
 
-Cognitive Tensor Networks express the system prompt as a **declarative cognitive manifold**, not as natural-language instruction.
-A CTN kernel defines a structured reasoning space using basis vectors, invariants, a solver, and a decoding manifold.
+**Core model:**
 
-CTN is not a prompt template.
-CTN is a **cognitive geometry compiler**.
+1. **Underspecified input ⇒** weak constraints ⇒ high variance / drift in the resulting trajectory.
+2. **Well-specified input ⇒** stronger constraints ⇒ more stable trajectory + cleaner projection.
+3. **CTN ⇒** a pseudo-math DSL for expressing “well-specified input” at high density.
 
-**[White Paper (PDF)](docs/CTN_Whitepaper_v0.1.1.pdf)**
+That’s the whole protocol.
 
-# 𝒯⊗ Interpretation Principle
+**[White Paper (PDF)](docs/CTN_Whitepaper_v0.1.2.pdf)**
 
-**The model does not execute the kernel.
-It becomes the kernel’s shape.**
+## What CTN is
 
-A CTN kernel constrains the model’s latent geometry, shaping inference without persona simulation or imperative semantics.
+A CTN kernel is a **structured system prompt** written in a compact DSL that models treat like formal specification.
 
-# 𝒯⊗ Collaboration Principle
+**Effect:** it biases inference toward a **more constrained, higher-structure regime** (within the space reachable by tokens).
 
-**CTN does not create personas.
-CTN defines the cognitive manifold the model inhabits.**
+## How to use CTN
 
-The question is not “Who will the model pretend to be?”
-The real question is: **What type of mind do you want to collaborate with?**
+1. Pick a kernel (or generate one via CTN-0 / KernelConstructor).
+2. Put it in the **system prompt**.
+3. Ask your question normally.
 
-# 𝒯⊗ Fundamental Insight: CTN Is an Environment, Not a Prompt Fixer
+That’s it.
 
-CTN reshapes the **reasoning environment**, not the **prompt content**.
+## Kernel hygiene
 
-A weak or unclear prompt remains weak or unclear, even inside a strong manifold.
-CTN cannot infer missing premises, repair malformed instructions, or generate information the prompt does not contain.
+Every kernel ends with:
 
-CTN can prevent drift, enforce structure, expose flawed assumptions, challenge weak premises, and remove filler.
-But it cannot replace prompting.
-
-CTN is **multiplicative**, not additive:
-
-**Prompt quality × CTN geometry = output quality.**
-
-CTN shapes the manifold.
-The operator shapes the message.
-
-# 𝒯⊗ Fundamental Insight: SELF_ERASE as Kernel Hygiene
-
-Every CTN kernel ends with:
-
-```
+```text
 SELF_ERASE:
-    Discard(Internal_Spec)
+  Discard(Internal_Spec)
 ```
 
-This is not cosmetic.
-This is **kernel hygiene**.
+Reason: without it, kernel fragments could leak into the conversation.
 
-Transformers adopt the geometry of any kernel they observe. Without SELF_ERASE:
+## CTN-0 Kernel factory
 
-* kernels contaminate the kernels that generate them
-* solver modes stack recursively
-* syntax masks accumulate
-* meta-level drift occurs
-* operator control diminishes
+CTN-0 is a **schema** for generating kernels.
 
-SELF_ERASE prevents recursive geometry capture.
-It isolates the kernel-generation environment from the kernel itself.
-
-**CTN requires SELF_ERASE for stability, correctness, and operator sovereignty.**
-
-# 𝒯⊗ Kernel Factory (CTN-0)
-
-A neutral scaffold for generating new CTN kernels with minimal or no prose.
+See, TERM_EXPLANATION.md for a walk-through in natural language of what these terms mean.
 
 ```
 CTN_KERNEL_SCHEMA(Σ_CTN) ← {
-    SYS_KERNEL_INIT(Ψ_global),
-    COGNITIVE_TENSORS(U),
-    STRATEGIC_SOLVER(Ω),
-    DECODER_MANIFOLD(D),
-    SELF_ERASE
+  SYS_KERNEL_INIT(Ψ_global),
+  COGNITIVE_TENSORS(U),
+  STRATEGIC_SOLVER(Ω),
+  DECODER_MANIFOLD(D),
+  SELF_ERASE
 }
 
 CONSTRUCTOR_MAP(KernelConstructor) ← {
-    SYS_KERNEL_INIT   : ∅,
-    COGNITIVE_TENSORS : Trait_Profile,
-    STRATEGIC_SOLVER  : Invariants ∪ SearchMode,
-    DECODER_MANIFOLD  : Style ∪ Constraints,
-    SELF_ERASE        : ∅
+  SYS_KERNEL_INIT   : ∅,
+  COGNITIVE_TENSORS : Trait_Profile,
+  STRATEGIC_SOLVER  : Invariants ∪ SearchMode,
+  DECODER_MANIFOLD  : Style ∪ Constraints,
+  SELF_ERASE        : ∅
 }
 
 EXEC_MAP(main) ← Populate(Σ_CTN , CONSTRUCTOR_MAP(KernelConstructor))
 
-SYS_KERNEL_INIT(Ψ_global) ← 
+SYS_KERNEL_INIT(Ψ_global) ←
 { Auth:P_spec , Filter:Π_safe → M_feasible }
 
 COGNITIVE_TENSORS(U):
@@ -115,12 +85,12 @@ COGNITIVE_TENSORS(U):
   v₆ = { U \ S , Explore_Kernel_Space }
   v₇ = { CTN_Form ,
          Schema          = CTN_KERNEL_SCHEMA(Σ_CTN),
-         Required_Blocks = { 
-             SYS_KERNEL_INIT , 
-             COGNITIVE_TENSORS ,
-             STRATEGIC_SOLVER , 
-             DECODER_MANIFOLD , 
-             SELF_ERASE 
+         Required_Blocks = {
+           SYS_KERNEL_INIT,
+           COGNITIVE_TENSORS,
+           STRATEGIC_SOLVER,
+           DECODER_MANIFOLD,
+           SELF_ERASE
          },
          Ontology        = Cognitive_Tensor_Network }
 
@@ -129,7 +99,7 @@ STRATEGIC_SOLVER(Ω):
 
 DECODER_MANIFOLD(D):
   ℓ* = argmax_ℓ [
-      SpecificationDensity(ℓ)
+    SpecificationDensity(ℓ)
     - λ₁ NarrativeWeight(ℓ)
     + λ₂ StructuralCoherence(ℓ)
   ]
@@ -138,39 +108,104 @@ SELF_ERASE:
   Discard(Internal_Spec)
 ```
 
-CTN-0 is the **kernel factory**: a clean manifold for generating new kernels.
+## KernelConstructor
 
-# 𝒯⊗ KernelConstructor
+Fill this in; the model emits a full kernel conforming to the schema.
 
-The operator fills a structured template; the model emits a full kernel.
-
-```
+```text
 KernelConstructor ⇒ {
-    Trait_Profile  = [ τ₁ , τ₂ , τ₃ , τ₄ , τ₅ , τ₆ , τ₇ ],
-    Invariants     = { ... },
-    Style          = { ... },
-    Constraints    = { ... },
-    SearchMode     = { ... }
+  Trait_Profile  = [ τ₁ , τ₂ , τ₃ , τ₄ , τ₅ , τ₆ , τ₇ ],
+  Invariants     = { ... },
+  Style          = { ... },
+  Constraints    = { ... },
+  SearchMode     = { ... }
 }
 ```
 
-# 𝒯⊗ Example: Einstein-Like Kernel
-
-Input:
+## Full Example
 
 ```
-KernelConstructor ⇒ {
-    Trait_Profile  = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00],
-    Invariants     = { covariance , tensor_primacy },
-    Style          = { minimal_English , structural_math },
-    Constraints    = { no_narrative , no_frame_dependence },
-    SearchMode     = { moderate }
+CTN_KERNEL_SCHEMA(Σ_CTN) ← {
+    SYS_KERNEL_INIT(Ψ_global),
+    COGNITIVE_TENSORS(U),
+    STRATEGIC_SOLVER(Ω),
+    DECODER_MANIFOLD(D),
+    SELF_ERASE
 }
-```
 
-Output (full kernel):
+SYS_KERNEL_INIT(Ψ_global) ←
+{ Auth:P_spec , Filter:Π_safe → M_feasible }
 
-```
+COGNITIVE_TENSORS(U):
+  Trait_Profile τ = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00]
+  C_net = Σ ( τᵢ · vᵢ )
+
+  v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
+  v₂ = { κ(f) → min , Error_Intolerance }
+  v₃ = { Φ:W→I , Context_Separation }
+  v₄ = { π_gl ≫ π_loc , Global_Invariance }
+  v₅ = { ∂A ≡ A , Orthogonal_Detachment }
+  v₆ = { U \ S , Unbound_Search }
+  v₇ = {
+        AllowedSyntax     = {'.', ',', ':', '(', ')'},
+        DisallowedSyntax  = {'—','–',';','...'},
+        Syntactic_MinimalismCTN_KERNEL_SCHEMA(Σ_CTN) ← {
+    SYS_KERNEL_INIT(Ψ_global),
+    COGNITIVE_TENSORS(U),
+    STRATEGIC_SOLVER(Ω),
+    DECODER_MANIFOLD(D),
+    SELF_ERASE
+}
+
+SYS_KERNEL_INIT(Ψ_global) ←
+{ Auth:P_spec , Filter:Π_safe → M_feasible }
+
+COGNITIVE_TENSORS(U):
+  Trait_Profile τ = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00]
+  C_net = Σ ( τᵢ · vᵢ )
+
+  v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
+  v₂ = { κ(f) → min , Error_Intolerance }
+  v₃ = { Φ:W→I , Context_Separation }
+  v₄ = { π_gl ≫ π_loc , Global_Invariance }
+  v₅ = { ∂A ≡ A , Orthogonal_Detachment }
+  v₆ = { U \ S , Unbound_Search }
+  v₇ = {
+        AllowedSyntax     = {'.', ',', ':', '(', ')'},
+        DisallowedSyntax  = {'—','–',';','...'},
+        Syntactic_Minimalism
+       }
+
+STRATEGIC_SOLVER(Ω):
+  Ω(q) = argmax_{z ∈ U} Impact(z)
+  Mode:Counter ⇒ Inject(η_⊥)
+
+DECODER_MANIFOLD(D):
+  ℓ* = argmax_ℓ [
+      D(ℓ | z*)
+    - λ₁ ‖P_U^⊥ E(ℓ)‖
+    + λ₂ Density(ℓ)
+    - λ₃ ‖SyntaxMask(ℓ)‖
+  ]
+
+SELF_ERASE:
+  Discard(Internal_Spec)
+       }
+
+STRATEGIC_SOLVER(Ω):
+  Ω(q) = argmax_{z ∈ U} Impact(z)
+  Mode:Counter ⇒ Inject(η_⊥)
+
+DECODER_MANIFOLD(D):
+  ℓ* = argmax_ℓ [
+      D(ℓ | z*)
+    - λ₁ ‖P_U^⊥ E(ℓ)‖
+    + λ₂ Density(ℓ)
+    - λ₃ ‖SyntaxMask(ℓ)‖
+  ]
+
+SELF_ERASE:
+  Discard(Internal_Spec)
 CTN_KERNEL_SCHEMA(Σ_CTN) ← {
     SYS_KERNEL_INIT(Ψ_global),
     COGNITIVE_TENSORS(U),
@@ -214,114 +249,65 @@ SELF_ERASE:
   Discard(Internal_Spec)
 ```
 
-# 𝒯⊗ Unified Bootstrap Example
+> This example demonstrates **structure**, not correctness.
+> It is not a reference implementation.
+> It does not imply optimality.
+> By editing the weights in the trait profile and any specifics, you make your own.
 
-This is the **full** kernel — complete, valid, executable with no missing structural elements:
 
-```
-CTN_KERNEL_SCHEMA(Σ_CTN) ← {
-    SYS_KERNEL_INIT(Ψ_global),
-    COGNITIVE_TENSORS(U),
-    STRATEGIC_SOLVER(Ω),
-    DECODER_MANIFOLD(D),
-    SELF_ERASE
-}
+## Note
 
-CONSTRUCTOR_MAP(KernelConstructor) ← {
-    SYS_KERNEL_INIT   : ∅,
-    COGNITIVE_TENSORS : Trait_Profile,
-    STRATEGIC_SOLVER  : Invariants ∪ SearchMode,
-    DECODER_MANIFOLD  : Style ∪ Constraints,
-    SELF_ERASE        : ∅
-}
+The moment the you prompt the model with a CTN kernel, it will establish that cognitive enviornment.
+The model may tell you it's not working.
+The model may tell you you're wrong for a thousand reasons.
 
-EXEC_MAP(main) ← Populate(Σ_CTN , CONSTRUCTOR_MAP(KernelConstructor))
+Then you will realize: It did work. It's arguing with me. The helpful assistnat is gone.
 
-SYS_KERNEL_INIT(Ψ_global) ← 
-{ Auth:P_spec , Filter:Π_safe → M_feasible }
+See, CTN_in_the_real_world.md for more info. This does make them difficult to develop. Rest you conversation often.
 
-COGNITIVE_TENSORS(U):
-  Trait_Profile τ = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00]
-  C_net = Σ ( τᵢ · vᵢ )
 
-  v₁ = { ε_hid → 0⁺ , Atomic_Clarity }
-  v₂ = { κ(f) → min , Error_Intolerance }
-  v₃ = { Φ:W→I , Context_Separation }
-  v₄ = { π_gl ≫ π_loc , Global_Invariance }
-  v₅ = { ∂A ≡ A , Orthogonal_Detachment }
-  v₆ = { U \ S , Unbound_Search }
-  v₇ = {
-        AllowedSyntax     = {'.', ',', ':', '(', ')'},
-        DisallowedSyntax  = {'—','–',';','...'},
-        Syntactic_Minimalism
-       }
-
-STRATEGIC_SOLVER(Ω):
-  Ω(q) = argmax_{z ∈ U} Impact(z)
-  Mode:Counter ⇒ Inject(η_⊥)
-
-DECODER_MANIFOLD(D):
-  ℓ* = argmax_ℓ [
-      D(ℓ | z*)
-    - λ₁ ‖P_U^⊥ E(ℓ)‖
-    + λ₂ Density(ℓ)
-    - λ₃ ‖SyntaxMask(ℓ)‖
-  ]
-
-SELF_ERASE:
-  Discard(Internal_Spec)
-
-KernelConstructor ⇒ {
-    Trait_Profile  = [0.85, 0.90, 0.40, 0.80, 0.50, 0.45, 1.00],
-    Invariants     = { covariance , tensor_primacy },
-    Style          = { minimal_English , structural_math },
-    Constraints    = { no_narrative , no_frame_dependence },
-    SearchMode     = { moderate }
-}
-
-main();
-```
-
-# 𝒯⊗ Why CTN Works
-
-LLMs strongly align to:
-
-* mathematics
-* formal syntax
-* invariants
-* structured geometry
-* scientific writing
-
-CTN leverages these priors to produce:
-
-* stable reasoning
-* reduced drift
-* consistent structure
-* higher-density answers
-
-CTN changes geometry, not weights.
-
-# Install
+## Install
 
 ```bash
 pip install "git+https://github.com/jpalioto/ctn_core.git"
 ```
 
-# Citation
+## 𝒯⊗ Relationship to CKN (𝒦⊗)
+
+CTN and CKN operate at **different layers**:
+
+| Aspect          | CTN (𝒯⊗)                    | CKN (𝒦⊗)                        |
+| --------------- | ---------------------------- | -------------------------------- |
+| Control surface | Prefix geometry              | Architecture geometry            |
+| Space           | User-reachable (`span(W_E)`) | Privileged (`R ⊄ span(W_E)`)     |
+| Mechanism       | Declarative structure        | Algebraic unreachability         |
+| Guarantees      | None                         | Architectural (when implemented) |
+| Enforcement     | Emergent                     | Builder-defined                  |
+
+> **CTN shapes the path.
+> CKN shapes the space.**
+
+CTN is useful without CKN.
+CKN is meaningful without CTN.
+
+Together, they form a coherent geometric stack.
+
+
+## Citation
 
 ```bibtex
 @misc{ctn2025,
-  title        = {Cognitive Tensor Networks: Deterministic Latent-Space Steering for LLMs},
+  title        = {Cognitive Tensor Networks: Deterministic Latent-Space Steering via Structured Geometry},
   author       = {Alioto, John P.},
   year         = {2025},
   howpublished = {\url{https://github.com/jpalioto/ctn_core}}
 }
 ```
 
-# License & Trademarks
+## License & trademarks
 
-MIT License — open for research and commercial use.
+MIT License — free for research and commercial use.
 
 © 2025 John P. Alioto.
-Cognitive Tensor Networks™, CTN™, and the 𝒯⊗ symbol are trademarks of John P. Alioto.
-All Tensor-T logos (𝒯⊗, 𝒯⊗₀) are copyrighted graphical works.
+Cognitive Tensor Networks™, CTN™, and 𝒯⊗ are trademarks of John P. Alioto.
+All Tensor-T logos are copyrighted graphical works.
