@@ -1,0 +1,396 @@
+\documentclass[11pt]{article}
+
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{hyperref}
+
+\title{Cognitive Tensor Networks\\
+Structured Latent-Space Steering via Syntactic Constraints}
+\author{John P.~Alioto}
+\date{Protocol v0.1.2\\December 2025}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Standard interaction with Large Language Models (LLMs) relies on natural-language
+directives interpreted through probabilistic token dynamics. This produces semantic drift,
+persona instability, and hallucinated detail. Cognitive Tensor Networks (CTN) provide a
+zero-shot prompting protocol that replaces informal instruction with structured mathematical
+syntax. CTN constrains the \emph{input} manifold by encoding a cognitive configuration as
+a deterministic prefix in a formal grammar. Under the deterministic LLM model
+$(F_\Theta,G_\Theta,h_0,x)$, CTN does not modify $F_\Theta$ or $G_\Theta$; it only chooses
+$x$.
+
+We present an abstract CTN model in which a small set of conceptual traits spans a
+configuration space, an idealized solver chooses configurations that would maximize an
+operator-defined utility, and a decoder objective describes the kind of outputs CTN is intended
+to bias the model toward. These objectives are \emph{design targets}, not functions the model
+explicitly optimizes.
+
+A small, single-task experiment (whitepaper drafting) with Gemini 3.0 Pro Preview and
+ChatGPT~5.1 suggests that CTN can reduce ontological drift and eliminate obviously
+hallucinated architectural elements in that setting, without modifying model parameters.
+CTN is presented as an agency protocol for operators who require more stable reasoning
+and explicit control over the \emph{prompt layer} under long-context interaction.
+\end{abstract}
+
+\section{Model and Scope}
+
+We adopt the ``Fundamental Axiom'' view of LLMs: for fixed parameters $\Theta$, an LLM
+is a deterministic dynamical system whose state evolution is governed by
+\begin{equation}
+  h_{t+1} = F_\Theta(h_t,x_t), \qquad y_t = G_\Theta(h_{t+1}),
+\end{equation}
+where $h_t \in H \subset \mathbb{R}^n$ is the hidden state, $x_t$ is the input token
+(or token embedding), and $y_t$ the output token.\footnote{In practice, we assume
+deterministic decoding, e.g.\ greedy or fixed-seed sampling.} The model parameters
+$\Theta$ and the functions $F_\Theta,G_\Theta$ are fixed at inference time.
+
+Let $W_E \in \mathbb{R}^{n \times |V|}$ denote the embedding matrix and
+\begin{equation}
+  U_{\text{user}} = \mathrm{span}(W_E) \subset \mathbb{R}^n
+\end{equation}
+the user-accessible subspace in the sense of \cite{alioto_fundamental_axiom,alioto_ckn}.
+User interaction consists solely of providing token sequences $x = (x_0,\dots,x_{T-1})$.
+All control we have over the system is exercised through $x$.
+
+\emph{Cognitive Tensor Networks (CTN)} are strictly an \emph{input-layer} protocol:
+\begin{itemize}
+  \item CTN does not change $\Theta$, $F_\Theta$, or $G_\Theta$.
+  \item CTN defines a structured, formal grammar for constructing the initial prefix
+        $x_{0:k}$ of a session from a small configuration vector and an operator objective.
+  \item All latent-space effects are emergent: they arise because the model interprets
+        this formal prefix using patterns it learned on mathematics and code.
+\end{itemize}
+
+This paper is about the operator-level protocol and its conceptual geometry. A more
+fine-grained geometric analysis of CTN in the context of tool selection is given in
+\cite{alioto_ctn_tools}.
+
+\section{CTN Kernel as a Configuration Map}
+
+A CTN kernel instantiates a global cognitive configuration and a set of textual constraints.
+The configuration lives in a low-dimensional \emph{trait space}; the constraints live in
+the context window.
+
+\subsection{Trait basis and configuration vector}
+
+CTN uses seven conceptual traits, originally denoted by $\vec v_1,\dots,\vec v_7$.
+In this version we treat them explicitly as basis elements of a configuration space
+$\mathbb{R}^7$, not as basis vectors of the model's hidden state $H$.
+
+Let $\{e_1,\dots,e_7\}$ be the standard basis of $\mathbb{R}^7$. A \emph{trait profile}
+is a vector
+\begin{equation}
+  \tau = (\tau_1,\dots,\tau_7) \in [0,1]^7.
+\end{equation}
+The \emph{cognitive configuration} is
+\begin{equation}
+  c_{\text{net}} = \sum_{i=1}^7 \tau_i e_i \in \mathbb{R}^7.
+\end{equation}
+Each coordinate corresponds to a named trait:
+\begin{itemize}
+  \item $i=1$: Atomic Derivation (prefer primitive, local derivations).
+  \item $i=2$: Error Intolerance (avoid invention when references are missing).
+  \item $i=3$: Context Separation (separate world-model from instructions).
+  \item $i=4$: Global Invariance (respect global constraints over local narrative).
+  \item $i=5$: Orthogonal Detachment (avoid self-narrative and persona).
+  \item $i=6$: Unbound Search (allow exploration within constraints).
+  \item $i=7$: Syntactic Minimalism (restrict output to a small allowed syntax).
+\end{itemize}
+
+A CTN implementation provides a deterministic mapping
+\begin{equation}
+  \mathcal{K} : \mathbb{R}^7 \times \mathcal{Q} \to V^*
+\end{equation}
+that takes a trait vector $c_{\text{net}}$ and a query $q$ and returns a \emph{kernel
+prompt}---a token sequence encoding the traits and the requested task in a fixed
+syntactic format. This mapping is realized as a prompt template plus string-level
+substitutions; no assumption is made about how it embeds into $H$.
+
+\subsection{Idealized strategic solver}
+
+Conceptually, an operator might want to choose $c_{\text{net}}$ to optimize some
+utility $\mathrm{Impact}(c_{\text{net}};q)$ that measures the usefulness of the
+resulting reasoning for query $q$:
+\begin{equation}
+  c_{\text{net}}^*(q) \in \arg\max_{c \in \mathcal{C}} \mathrm{Impact}(c;q),
+  \label{eq:ideal-solver}
+\end{equation}
+where $\mathcal{C}\subseteq[0,1]^7$ is the allowed configuration set.
+
+We denote this ideal choice by an operator
+\begin{equation}
+  \Omega^*(q) = c_{\text{net}}^*(q).
+\end{equation}
+Crucially:
+\begin{itemize}
+  \item $\Omega^*$ is an \emph{idealized} object. The LLM does not solve
+        \eqref{eq:ideal-solver} internally.
+  \item In practice, CTN uses fixed configurations (e.g.\ a default $\tau$ for
+        ``technical derivation'') or simple heuristics. $\Omega^*$ describes the
+        \emph{target} we would like CTN to approximate, not the actual computation.
+\end{itemize}
+
+\subsection{Idealized decoder objective}
+
+Similarly, we can describe the kind of outputs CTN is meant to favor with an
+\emph{idealized scoring functional}
+\begin{equation}
+  J(\ell; z^*,c_{\text{net}}) =
+  D(\ell \mid z^*) - \lambda_1 \bigl\|P_{U_{\text{CTN}}}^\perp E(\ell)\bigr\|
+  + \lambda_2 \,\mathrm{Density}(\ell)
+  - \lambda_3 \bigl\|\mathrm{SyntaxMask}(\ell)\bigr\|.
+  \label{eq:decoder-objective}
+\end{equation}
+Here:
+\begin{itemize}
+  \item $z^*$ is an abstract latent ``solution sketch'' associated with the
+        configuration,
+  \item $D(\ell\mid z^*)$ is a task-specific fidelity term (e.g.\ how well $\ell$
+        instantiates the requested derivation),
+  \item $E(\ell)$ is the embedding of the output tokens,
+  \item $U_{\text{CTN}} \subseteq U_{\text{user}}$ is a conceptual CTN subspace
+        (Section~\ref{sec:cognitive-projection}),
+  \item $\mathrm{Density}$ and $\mathrm{SyntaxMask}$ implement syntactic preferences
+        (e.g.\ minimal punctuation, no persona language),
+  \item and $\lambda_i \ge 0$ are hyperparameters chosen by the operator.
+\end{itemize}
+
+The corresponding idealized choice is
+\begin{equation}
+  \ell^* \in \arg\max_{\ell \in V^*} J(\ell; z^*,c_{\text{net}}).
+\end{equation}
+Again, the LLM does \emph{not} optimize $J$ explicitly. In reality it chooses
+\begin{equation}
+  \hat\ell \approx \arg\max_\ell \log p_\Theta(\ell \mid \text{CTN prefix},q),
+\end{equation}
+and CTN is designed so that outputs with high $J$ tend also to have high model
+probability. $J$ is a design tool, not a literal objective of $F_\Theta$.
+
+\section{Interpretation and Formal Principles}
+
+\subsection{CTN interpretation principle}
+
+\emph{Interpretation principle.}
+CTN kernels are declarative geometric \emph{specifications} for input geometry, not
+programs executed by the model. We interpret CTN-structured interaction as if the
+kernel were defining a cognitive subspace in $U_{\text{user}}$ and the model were
+biasing its trajectories toward that subspace. This is a conceptual mapping:
+\begin{itemize}
+  \item We do \emph{not} claim that CTN directly modifies $F_\Theta$ or $G_\Theta$.
+  \item We do \emph{not} claim that the model solves the optimization problems in
+        Section~2 literally.
+  \item We claim that the structure, ordering, and syntax of the CTN prefix are
+        often sufficient for the model to behave \emph{as if} it were respecting
+        those constraints.
+\end{itemize}
+
+This is consistent with the Fundamental Axiom: all effects arise from different
+choices of the input sequence $x$ and the resulting trajectories under $F_\Theta$.
+
+\subsection{CTN contract}
+
+A CTN kernel is intended to respect the following contract:
+\begin{enumerate}
+  \item CTN constrains the probabilistic reasoning space by changing the prefix,
+        but it does \emph{not} enforce deterministic execution. Different models
+        or decoding regimes may still yield different outputs under the same kernel.
+  \item Kernels define allowable cognitive \emph{subspaces} (regions in input and
+        latent geometry), not imperative instructions.
+  \item CTN does not modify model parameters; it shapes inference trajectories
+        through structured context.
+  \item Effects arise from manifold steering, trait activation, and syntactic bias
+        rather than from any explicit code interpretation.
+  \item Compliance is emergent from latent-space alignment, not enforced through
+        hard control flow or external verifiers.
+\end{enumerate}
+
+CTN is therefore distinct from simulator-based prompting and persona frameworks:
+it does not assign identities; it specifies geometry.
+
+\subsection{Cognitive subspace projection}
+\label{sec:cognitive-projection}
+
+To connect CTN to the geometric language of \cite{alioto_fundamental_axiom,alioto_ckn},
+we introduce a conceptual CTN subspace $U_{\text{CTN}} \subseteq U_{\text{user}}$ and
+use the notation
+\begin{equation}
+  h'_t = P_{U_{\text{CTN}}}(h_t) + \alpha P_{U_{\text{CTN}}}^\perp(h_t), \qquad \alpha \in [0,1].
+  \label{eq:projection}
+\end{equation}
+This should \emph{not} be read as an operation the model actually performs. Rather,
+\eqref{eq:projection} is a compact way of expressing the intended effect:
+\begin{itemize}
+  \item $P_{U_{\text{CTN}}}(h_t)$ represents the component of the hidden state aligned
+        with the cognitive structure described by the CTN prefix.
+  \item $P_{U_{\text{CTN}}}^\perp(h_t)$ represents everything else in $U_{\text{user}}$.
+  \item The scalar $\alpha$ encodes how much freedom we conceptually allow to the
+        orthogonal component.
+\end{itemize}
+
+In the real system, $h_t$ evolves as $h_{t+1} = F_\Theta(h_t,x_t)$ with $x_t$ drawn
+from the CTN grammar. No projection is applied in code; \eqref{eq:projection} is a
+diagnostic lens for interpreting trajectories in terms of ``within-kernel'' and
+``off-kernel'' components.
+
+\section{Methodology and Preliminary Experiment}
+
+\subsection{Task and conditions}
+
+We evaluated CTN on a single, long-form drafting task: write a whitepaper defining
+CTN as a control-theoretic architecture for LLMs. The following prompting conditions
+were tested at temperature $T=0$:
+\begin{enumerate}
+  \item \textbf{Control:} no system prompt beyond the default API configuration.
+  \item \textbf{CTN v0.1.0:} CTN kernel with traits 1--6 enabled (no explicit
+        syntactic minimalism).
+  \item \textbf{CTN v0.1.1:} CTN kernel with traits 1--7 enabled (including a
+        minimal syntax constraint).
+\end{enumerate}
+
+Each condition produced one full draft per model (Gemini 3.0 Pro Preview and
+ChatGPT~5.1). Outputs were analyzed qualitatively for:
+\begin{itemize}
+  \item Ontological drift (invented mechanisms, ungrounded entities).
+  \item Syntactic variance (persona language, rhetorical filler).
+  \item Coherence with the CTN specification language.
+\end{itemize}
+
+\subsection{Observed behavior}
+
+Under the control condition, both models produced architectural elements not grounded
+in the provided description (e.g.\ invented modules, pseudo-formal components). Internal
+chain-of-thought traces (where available) showed narrative planning rather than local
+derivation.
+
+Under the CTN conditions:
+\begin{itemize}
+  \item For this task, we observed no invented architectural components beyond those
+        implied by the kernel. When external references were unavailable, the internal
+        trace recorded a decision to restrict reasoning to kernel definitions. This is
+        consistent with the intent of trait 2 (Error Intolerance).
+  \item The CTN v0.1.1 kernel (with syntactic minimalism) produced drafts with reduced
+        persona language and less rhetorical filler, consistent with traits 5 and 7.
+  \item Chain-of-thought text explicitly referenced structural constraints (e.g.\ ``I
+        will only use modules defined in the kernel''), suggesting that the CTN grammar
+        was being parsed as a specification.
+\end{itemize}
+
+We emphasize that this is \emph{anecdotal and task-specific}. It would be wrong to
+generalize from this experiment to claims like ``CTN eliminates hallucinations.'' A
+more accurate statement is:
+
+\begin{quote}
+In this single whitepaper-drafting experiment, CTN-structured prompts eliminated
+obviously hallucinated architectural elements and reduced ontological drift,
+relative to a no-kernel control, at $T=0$ for the two tested models.
+\end{quote}
+
+\section{Relation to FA, CKN, and CTN-Tools}
+
+The CTN protocol described here is intended to coexist with more formal frameworks.
+
+\paragraph{Fundamental Axiom.}
+The FA paper formalizes LLMs as deterministic dynamical systems with state evolution
+$h_{t+1}=F_\Theta(h_t,x_t)$ and output map $G_\Theta$ \cite{alioto_fundamental_axiom}.
+CTN is fully compatible with this view:
+\begin{itemize}
+  \item CTN modifies only $x_t$ (through the prefix grammar).
+  \item $F_\Theta$, $G_\Theta$, and $\Theta$ remain unchanged.
+  \item All claims about CTN are claims about how different input sequences induce
+        different trajectories under the same $F_\Theta$.
+\end{itemize}
+
+\paragraph{Cognitive Kernel Networks (CKN).}
+CKN is an architectural specification for privileged reasoning manifolds $R \subset H$
+that user-space tokens cannot perturb by construction \cite{alioto_ckn}. CKN operates
+at the level of model geometry (choice of $W_E$, decomposition $H=U\oplus D\oplus R$,
+bounded perturbation, invariants).
+
+CTN is orthogonal:
+\begin{itemize}
+  \item CTN is a user-space protocol that shapes the prefix in $U_{\text{user}}$.
+  \item CKN shapes the topology of $H$ itself.
+  \item They can be used independently or together: CTN for session geometry, CKN
+        for kernel geometry.
+\end{itemize}
+
+\paragraph{CTN for tool selection.}
+The CTN-tools paper \cite{alioto_ctn_tools} develops a formal CTN kernel for tool
+selection, with explicit analysis of margins, simplex configurations, and Jacobian
+structure. The CTN whitepaper here is intentionally higher-level: it specifies a
+protocol to make LLM behavior more predictable at the prompt layer. The geometric
+interpretation in Sections~2--4 is designed to be consistent with the more detailed
+analysis in \cite{alioto_ctn_tools}, but does not replace it.
+
+\section{Limitations and Future Work}
+
+CTN, as described here, has several important limitations:
+\begin{itemize}
+  \item \textbf{No guarantee of determinism.} CTN reduces variance and drift in
+        many cases, but cannot guarantee identical outputs across models, decoding
+        settings, or strong distribution shift.
+  \item \textbf{No formal bounds.} This whitepaper does not prove robustness or
+        safety guarantees from CTN alone. Formal bounds require tighter integration
+        with the kinds of geometric arguments developed in \cite{alioto_ctn_tools}.
+  \item \textbf{Model dependence.} The effectiveness of CTN depends on the model's
+        training distribution (e.g.\ exposure to math/code) and its instruction-following
+        capability.
+  \item \textbf{Evaluation narrowness.} Our evaluation is limited to a single, long-form
+        technical writing task with $T=0$. Broader tasks and sampling settings remain
+        to be studied.
+\end{itemize}
+
+Future work includes:
+\begin{itemize}
+  \item Quantitative evaluation of CTN across diverse tasks and models.
+  \item Coupling CTN prefixes with explicit geometric measurements (e.g.\ probing
+        hidden states into $U_{\text{CTN}}$ vs.\ its orthogonal complement).
+  \item Automatic trait-selection policies approximating $\Omega^*$ at the operator
+        level.
+  \item Joint CTN+CKN designs where the CTN subspace is explicitly aligned with a
+        builder-defined privileged manifold.
+\end{itemize}
+
+\section{Conclusion}
+
+Cognitive Tensor Networks formalize prompt engineering as the construction of structured,
+mathematically flavored input geometry. Rather than persuading the model with natural-language
+style directives, CTN encodes a small cognitive configuration and a set of syntactic constraints
+into a deterministic prefix, which the model then interprets using its existing competence on
+formal domains.
+
+In the deterministic dynamical view of LLMs, CTN changes only the input sequence $x$, leaving
+$F_\Theta$ and $G_\Theta$ untouched. The geometric language used here---configuration space,
+subspaces, projections, decoder manifolds---is interpretive: it describes how CTN is intended
+to bias trajectories in $U_{\text{user}}$, not additional machinery inside the model.
+
+Preliminary experiments suggest that CTN can reduce ontological drift and suppress obvious
+hallucinated structure in some long-context settings. Stronger claims require more systematic
+evidence and tighter mathematical analysis, such as that developed for tool selection in
+\cite{alioto_ctn_tools}. CTN should therefore be understood as an operator-level protocol
+for structured prompting, compatible with and complementary to architectural frameworks
+like CKN, rather than as a standalone guarantee of correctness.
+
+\begin{thebibliography}{9}
+
+\bibitem{alioto_fundamental_axiom}
+J.~P.~Alioto.
+\newblock The Fundamental Axiom of Large Language Models.
+\newblock Protocol v1.2.0, December 2025.
+
+\bibitem{alioto_ckn}
+J.~P.~Alioto.
+\newblock Cognitive Kernel Networks: Root Trust for Privilege-Separated Reasoning in High-Dimensional Models.
+\newblock Protocol v1.2.0, December 2025.
+
+\bibitem{alioto_ctn_tools}
+J.~P.~Alioto.
+\newblock The Geometry of Tool Selection in Large Language Models.
+\newblock Protocol v1.2.0, December 2025.
+
+\end{thebibliography}
+
+\end{document}
