@@ -1,4 +1,3 @@
-```markdown
 # CTN Kernel Explained
 
 *A line-by-line geometric interpretation*
