@@ -18,7 +18,7 @@ CTN is a **token-efficient specification language** for **stabilizing user-space
 
 That’s the whole protocol.
 
-**[White Paper (PDF)](docs/CTN_Whitepaper_v0.1.2.pdf)**
+**[White Paper (PDF)](docs/CTN_Whitepaper_v0_1_2.pdf)**
 
 ## What CTN is
 
