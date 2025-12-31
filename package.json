@@ -1,0 +1,22 @@
+{
+  "name": "@ctn/core",
+  "version": "1.0.0",
+  "description": "CTN DSL specification, parser, and validator",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "tsc --noEmit"
+  },
+  "author": "John P. Alioto",
+  "license": "MIT",
+  "packageManager": "pnpm@10.26.2",
+  "devDependencies": {
+    "@types/node": "^25.0.3",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.16"
+  }
+}

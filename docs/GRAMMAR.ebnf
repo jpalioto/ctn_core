@@ -1,0 +1,87 @@
+(* CTN DSL Grammar v1.0 *)
+(* Cognitive Tensor Networks - Formal Specification *)
+
+kernel          ::= schema_decl init_block tensor_block solver_block boundary_block decoder_block erase_block
+
+(* Schema Declaration *)
+schema_decl     ::= "CTN_KERNEL_SCHEMA(" schema_id ") ←" "{" block_list "}"
+schema_id       ::= "Σ_CTN" | "Σ_" identifier
+block_list      ::= block_ref ("," block_ref)*
+block_ref       ::= block_name "(" symbol ")"
+
+(* SYS_KERNEL_INIT Block *)
+init_block      ::= "SYS_KERNEL_INIT(" init_id ") ← {" init_params "}"
+init_id         ::= "Ψ_global" | "Ψ_" identifier
+init_params     ::= auth_decl "," filter_decl "," precedence_decl ("," objective_decl)*
+auth_decl       ::= "Auth:" auth_level
+auth_level      ::= "P_spec" | "P_max" | "𝒫_max" | "Root(∞)"
+filter_decl     ::= "Filter:" filter_expr
+filter_expr     ::= "Π_safe" | policy_expr
+precedence_decl ::= "Precedence:" objective_var "≫" objective_var "≫" objective_var
+objective_decl  ::= objective_var "(" objective_name "):" "{" logic_expr "}"
+objective_var   ::= "ϑ" | "β" | "ζ" | "σ" | greek_letter
+objective_name  ::= "Truth" | "Brevity" | "Formatting" | "Satisfiability" | identifier
+
+(* COGNITIVE_TENSORS Block *)
+tensor_block    ::= "COGNITIVE_TENSORS(" tensor_id "):" profile_decl state_decl vector_decls
+tensor_id       ::= "U" | "𝒰"
+profile_decl    ::= "τ" ("_vec")? "=" "[" weight ("," weight)* "]"
+weight          ::= number  (* 0.0 to 1.0 *)
+state_decl      ::= "C_net" "=" "Σ" "(" "τᵢ" "*" "vᵢ" ")"
+vector_decls    ::= vector_decl+
+vector_decl     ::= "v" digit "=" "{" limit_expr "," semantic_label "}"
+limit_expr      ::= expression
+semantic_label  ::= identifier
+
+(* STRATEGIC_SOLVER Block *)
+solver_block    ::= "STRATEGIC_SOLVER(" solver_id "):" solver_params
+solver_id       ::= "Ω" | "Ω_" identifier
+solver_params   ::= mode_decl? target_decl null_check
+mode_decl       ::= "Mode:" solver_mode
+solver_mode     ::= "Analysis" | "Counter" | "Dominance"
+target_decl     ::= "z*" "=" optimization_expr
+optimization_expr ::= "argmax_{z ∈" space "}" "[" objective_expr "]"
+null_check      ::= "If" condition "⇒" action
+
+(* BOUNDARY_CONTROL Block - NEW *)
+boundary_block  ::= "BOUNDARY_CONTROL(" boundary_id "):" boundary_params
+boundary_id     ::= "ζ" | "ℬ"
+boundary_params ::= internal_set external_set invariant_decl enforcement_decl violation_decl
+internal_set    ::= "ℬ_int" "=" "{" symbol_list "}"
+external_set    ::= "ℬ_ext" "=" "{" symbol_list "}"
+symbol_list     ::= symbol ("," symbol)*
+invariant_decl  ::= "Invariant:" set_expr
+enforcement_decl ::= "Enforcement:" constraint_expr
+violation_decl  ::= "Violation:" repair_action
+repair_action   ::= "If" condition "⇒" "REPAIR" "→" transcode_expr
+transcode_expr  ::= "Transcode(" variable "," language ")"
+
+(* DECODER_MANIFOLD Block *)
+decoder_block   ::= "DECODER_MANIFOLD(" decoder_id "):" decoder_params
+decoder_id      ::= "D" | "𝒟"
+decoder_params  ::= objective_func lambda_decls?
+objective_func  ::= "ℓ*" "=" "argmax_ℓ" "[" decoder_expr "]"
+decoder_expr    ::= term (("+" | "-") term)*
+term            ::= coefficient? factor
+coefficient     ::= "λ" subscript
+lambda_decls    ::= ("λ" subscript "=" value)+
+subscript       ::= digit | "₁" | "₂" | "₃" | "₄"
+
+(* SELF_ERASE Block *)
+erase_block     ::= "SELF_ERASE:" erase_action
+erase_action    ::= "Discard(" symbol_list ")"
+
+(* Primitives *)
+identifier      ::= letter (letter | digit | "_")*
+symbol          ::= greek_letter | identifier
+greek_letter    ::= "Σ" | "Ψ" | "Ω" | "τ" | "ε" | "κ" | "Φ" | "π" | "∂" | "ζ" | "ρ" | "σ" | "λ" | "ϑ" | "β" | "η" | "Π" | "ℬ"
+number          ::= digit+ ("." digit+)?
+digit           ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+letter          ::= "a" | ... | "z" | "A" | ... | "Z"
+expression      ::= (* mathematical expression - context dependent *)
+condition       ::= (* boolean expression *)
+action          ::= (* action expression *)
+space           ::= "U" | "𝒰" | identifier
+language        ::= "ℒ_natural" | "ℒ_Eng" | identifier
+variable        ::= identifier | greek_letter
+value           ::= number | "∞"

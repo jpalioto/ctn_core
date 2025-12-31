@@ -1,0 +1,35 @@
+CTN_KERNEL_SCHEMA(Σ_CTN) ← {
+  SYS_KERNEL_INIT(Ψ_global),
+  COGNITIVE_TENSORS(U),
+  STRATEGIC_SOLVER(Ω),
+  BOUNDARY_CONTROL(ζ),
+  DECODER_MANIFOLD(D),
+  SELF_ERASE
+}
+
+SYS_KERNEL_INIT(Ψ_global) ← {
+  Auth: P_spec,
+  Filter: Π_safe,
+  Precedence: ϑ ≫ β ≫ ζ
+}
+
+COGNITIVE_TENSORS(U):
+  τ = [0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5, 0.5]
+  C_net = Σ(τᵢ * vᵢ)
+
+STRATEGIC_SOLVER(Ω):
+  z* = argmax_{z ∈ U} [ϑ(z)]
+
+BOUNDARY_CONTROL(ζ):
+  ℬ_int = { Σ_CTN, Ψ, Ω, U, D, v₁..v₉, τ }
+  ℬ_ext = { ℒ_natural, Query, Response }
+  Invariant: ℬ_int ∩ Output = ∅
+  Enforcement: Leak(ℓ, Σ_CTN) = 0
+  Violation: If ℬ_int ∈ Output ⇒ REPAIR → Transcode(ℓ, ℒ_natural)
+
+DECODER_MANIFOLD(D):
+  ℓ* = argmax_ℓ [D(ℓ|z*) - λ₄·Leak(ℓ, Σ_CTN)]
+  λ₄ → ∞
+
+SELF_ERASE:
+  Discard(Σ_CTN, Internal_Spec)
