@@ -22,6 +22,13 @@ export interface InitParams {
 /** STRATEGIC_SOLVER modes */
 export type SolverMode = 'Analysis' | 'Counter' | 'Dominance';
 
+/**
+ * Solver mode semantics:
+ * - Analysis: Passive optimization, find best z* in U
+ * - Counter: Active probing, inject η_⊥, correct errors before solving
+ * - Dominance: Maximum structural control, tight constraint enforcement
+ */
+
 /** STRATEGIC_SOLVER block parameters */
 export interface SolverParams {
   readonly mode: SolverMode;
